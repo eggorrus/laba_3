@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <cmath>
+#include <iomanip>
 
 using namespace std;
 
@@ -23,27 +24,35 @@ void vivod(double array[]) {
 	return;
 }
 
-bool proverka(int array[], int ne_null) {
-	int da = 0;
-	for (int i = 1; i < sizeof(array); i++) {
-		if (array[i] == array[i + 1]-1)
-			da += 1;
-	}
-	if (da == ne_null)
+bool stepen2(double n) {
+	if (floor(log2(n)) == log2(n))
 		return true;
 	else
 		return false;
 }
 
-void table(double array[], int n) {
-	cout << "            Массив #" << n <<"            "<< endl;
-	cout << "________________________________________________________________________________" << endl;
-	for (int i = 0; i < 15; i++) {
-		cout << "|" << array[i];
-		if (i == 14)
-			cout << "|" << endl;
+/*bool poryadok(int chisla[], int ne_null) {
+	int tr = 0;
+	for (int i = 0; i < 14; i++) {
+		if (chisla[i]==chisla[i+1]-1) {
+			tr += 1;
+		}
 	}
-	cout << "________________________________________________________________________________" << endl;
+	if (tr == ne_null)
+		return true;
+	else
+		return false;
+}*/
+
+void table(double array1[], double iksy[], int n) {
+	cout << "Массив #" << n << endl;
+	cout << "__________________________" << endl;
+	cout << "|     F      | |     x   |" << endl;
+	cout << "__________________________" << endl;
+	for (int i=0; i<15; i++){
+		cout << "| " << setw(10) << array1[i] << " | " << setw(10) << iksy[i] << " |" << endl;
+	}
+	cout << "__________________________" << endl;
 }
 
 int main(int argc, char* argv[])
@@ -58,8 +67,10 @@ int main(int argc, char* argv[])
 	cin >> x1 >> x2 >> a >> b >> c;
 	double massiv1[15], massiv2[15];
 	double step = (x2 - x1) / 14.0;
+	double iksy[15], iksy2[15];
 	for (int i = 0; i < 15; i++) {
 		double x = x1 + i * step;
+		iksy[i] = x;
 		massiv1[i] = F(x, a, b, c);
 		int a_c = a;
 		int b_c = b;
@@ -68,20 +79,21 @@ int main(int argc, char* argv[])
 			massiv1[i] = round(massiv1[i]);
 		else
 			massiv1[i] = round((massiv1[i]) * 100) / 100;
-		double obrx1, obrx2;
+		double obrx1, obrx2, obrx;
 		obrx1 = -x1;
 		obrx2 = -x2;
 		double step2 = (obrx1 - obrx2) / 14.0;
-		x = obrx2 + step2 * i;
-		massiv2[i] = F(x, a, b, c);
+		obrx = obrx2 + step2 * i;
+		iksy2[i] = obrx;
+		massiv2[i] = F(obrx, a, b, c);
 		if (((a_c | b_c) & (a_c | b_c)) == 0)
 			massiv2[i] = round(massiv2[i]);
 		else
 			massiv2[i] = round((massiv2[i]) * 100) / 100;
 	}
 	if (interface) {
-		table(massiv1, 1);
-		table(massiv2, 2);
+		table(massiv1, iksy, 1);
+		table(massiv2, iksy2, 2);
 	}
 	else {
 		vivod(massiv1);
@@ -107,13 +119,15 @@ int main(int argc, char* argv[])
 		for (int j = 0; j < 14; j++) {
 			if (obr_massiv1[j] > obr_massiv1[j + 1]) {
 				swap(obr_massiv1[j], obr_massiv1[j + 1]);
+				swap(iksy[j], iksy[j + 1]);
 				is_changed = true;
 			}
 		}
 	}
 	if (interface)
-		table(obr_massiv1, 3);
-	vivod(obr_massiv1);
+		table(obr_massiv1,iksy, 3);
+	else
+		vivod(obr_massiv1);
 	int povt = 0;
 	for (int j = 0; j < 14; j++) {
 		if (massiv1[j] == massiv1[j + 1])
@@ -122,48 +136,38 @@ int main(int argc, char* argv[])
 	if (interface)
 		cout << "Количество чисел всетрчающихся более одного раза: ";
 	cout << povt << endl;
-	int chisla[15];
-	for (int j = 0; j < 15; j++)
-		chisla[j] = 0;
-	bool stepen = false;
-	for (int i = 0; i < 15; i++) {
-		if (floor(log2(massiv1[i]) == log2(massiv1[i]))) {
-			stepen = true;
-			for (int k = 0; k < 15; k++) {
-				if (chisla[k] == 0) {
-					chisla[k] = i;
-					break;
-				}
-			}
-		}
-		else {
-			stepen = false;
-		}
+	int numOfPowers=0;
+	for (int i = 14; i >= 0; i--) {
+			if (stepen2(massiv1[i]))
+				numOfPowers ++;
+			else break;
 	}
-	int ne_null = 0;
-	for (int h = 0; h < 15; h++) {
-		if (chisla[h] != 0)
-			ne_null += 1;
+	if (numOfPowers != 0) {
+		if (interface)
+			cout << "Номер элемента, начиная с которого степени 2:" << 14 - numOfPowers << endl;
+		else
+			cout << 14 - numOfPowers << endl;
 	}
-	bool stepen2 = proverka(chisla, ne_null);
-	if (interface)
-		cout << "Номер элемента начиная с которого степени 2:";
-	if (stepen2)
-		cout << ne_null << endl;
-	else
-		cout << -1 << endl;
-
-	double g[15], d[15];
+	else {
+		if (interface)
+			cout << "Номер элемента, начиная с которого степени 2:" << -1 << endl;
+		else
+			cout << -1 << endl;
+	}
+	double g[15], d[15], plus_x[15], minus_x[15];
 	for (int i = 0; i < 15; i++)
 	{
 		g[i] = 0;
 		d[i] = 0;
+		plus_x[i] = 0;
+		minus_x[i] = 0;
 	}
 	for (int i = 0; i < 15; i++) {
 		if (massiv1[i] > 0) {
 			for (int c = 0; c < 15; c++) {
 				if (g[c] == 0) {
 					g[c] = massiv1[i];
+					minus_x[c] = iksy[i];
 					break;
 				}
 				else continue;
@@ -174,6 +178,7 @@ int main(int argc, char* argv[])
 			for (int s = 0; s < 15; s++) {
 				if (d[s] == 0) {
 					d[s] = massiv2[i];
+					plus_x[s] = iksy2[i];
 					break;
 				}
 				else continue;
@@ -206,8 +211,8 @@ int main(int argc, char* argv[])
 		}
 	}
 	if (interface) {
-		table(massiv1, 4);
-		table(massiv2, 5);
+		table(massiv1, plus_x, 4);
+		table(massiv2, minus_x, 5);
 	}
 	else {
 		vivod(massiv1);
