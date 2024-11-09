@@ -134,8 +134,10 @@ int main(int argc, char* argv[]) {
 	cout << repeat << endl;
 	int num_of_powers = 0;
 	for (int i = size; i <= 0; i--) {
-		if (power_of_two(arr1[i]))
-			num_of_powers++;
+		if (power_of_two(arr1[i]) && power_of_two(arr1[i - 1])) {
+			if ((int)log2(arr1[i]) == log2(arr1[i - 1]) + 1)
+				num_of_powers++;
+		}
 		else break;
 	}
 	if (interface)
