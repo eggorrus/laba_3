@@ -4,6 +4,13 @@
 
 using namespace std;
 
+double rounds(double n) {
+	n = round(n);
+	if (n == -0)
+		n = 0;
+	return n;
+}
+
 double F(double x, double a, double b, double c) {
 	if (x < 0 && b != 0)
 		return a * x * x + b;
@@ -79,12 +86,12 @@ int main(int argc, char* argv[]) {
 		arg2[i] = min_x;
 		arr2[i] = F(min_x, a, b, c);
 		if (((a_c | b_c) & (a_c | b_c)) == 0) {
-			arr1[i] = round(arr1[i]);
-			arr2[i] = round(arr2[i]);
+			arr1[i] = rounds(arr1[i]);
+			arr2[i] = rounds(arr2[i]);
 		}
 		else {
-			arr1[i] = round((arr1[i]) * 100) / 100;
-			arr2[i] = round((arr2[i]) * 100) / 100;
+			arr1[i] = rounds((arr1[i]) * 100) / 100.0;
+			arr2[i] = rounds((arr2[i]) * 100) / 100.0;
 		}
 	}
 	if (interface) {
@@ -139,6 +146,7 @@ int main(int argc, char* argv[]) {
 				num_of_powers++;
 		}
 		else break;
+
 	}
 	if (interface)
 		cout << "Номер элемента, начиная с которого степени 2: ";
