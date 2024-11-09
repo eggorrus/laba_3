@@ -8,15 +8,26 @@ double F(double x, double a, double b, double c) {
 	if (x < 0 && b != 0)
 		return a * x * x + b;
 	else if (x > 0 && b == 0) {
-		return (x - a) / (x - c);
+		return(x - a) / (x - c);
 	}
 	else
 		return x / c;
 }
 
-void vivod(double array[]) {
+void table(double arr[], double arg[], int n) {
+	cout << "Массив #" << n << endl;
+	cout << "__________________________" << endl;
+	cout << "|     F      | |     x   |" << endl;
+	cout << "__________________________" << endl;
 	for (int i = 0; i < 15; i++) {
-		if (i != 14)
+		cout << "| " << setw(10) << arr[i] << " | " << setw(10) << arg[i] << " |" << endl;
+	}
+	cout << "__________________________" << endl;
+}
+
+void array_to_disp(double array[], int size) {
+	for (int i = 0; i < size; i++) {
+		if (i != size - 1)
 			cout << array[i] << " ";
 		else
 			cout << array[i] << endl;
@@ -24,198 +35,206 @@ void vivod(double array[]) {
 	return;
 }
 
-bool stepen2(double n) {
-	if (floor(log2(n)) == log2(n))
+bool power_of_two(double a) {
+	if ((int)log2(a) == log2(a))
 		return true;
 	else
 		return false;
 }
 
-/*bool poryadok(int chisla[], int ne_null) {
-	int tr = 0;
-	for (int i = 0; i < 14; i++) {
-		if (chisla[i]==chisla[i+1]-1) {
-			tr += 1;
-		}
-	}
-	if (tr == ne_null)
-		return true;
-	else
-		return false;
-}*/
-
-void table(double array1[], double iksy[], int n) {
-	cout << "Массив #" << n << endl;
-	cout << "__________________________" << endl;
-	cout << "|     F      | |     x   |" << endl;
-	cout << "__________________________" << endl;
-	for (int i=0; i<15; i++){
-		cout << "| " << setw(10) << array1[i] << " | " << setw(10) << iksy[i] << " |" << endl;
-	}
-	cout << "__________________________" << endl;
-}
-
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	bool interface = false;
 	if (argc <= 1 || strcmp(argv[1], "false") != 0)
 		interface = true;
 	setlocale(LC_CTYPE, "rus");
-	if(interface)
+	const int size = 15;
+	double x1, x2, x, a, b, c;
+	if (interface)
 		cout << "Последовательно введите значения x1, x2, a, b, c в соответсвующем порядке." << endl;
-	double x1, x2, a, b, c;
 	cin >> x1 >> x2 >> a >> b >> c;
-	double massiv1[15], massiv2[15];
-	double step = (x2 - x1) / 14.0;
-	double iksy[15], iksy2[15];
-	for (int i = 0; i < 15; i++) {
-		double x = x1 + i * step;
-		iksy[i] = x;
-		massiv1[i] = F(x, a, b, c);
+	double step;
+	step = (x2 - x1) / (double)(size - 1);
+	double arr1[size], arr2[size], arg1[size], arg2[size];
+	for (int i = 0; i < size; i++) {
+		if (x1 > x2)
+			x = x2 + i * step;
+		else
+			x = x1 + i * step;
+		arg1[i] = x;
+		arr1[i] = F(x, a, b, c);
 		int a_c = a;
 		int b_c = b;
 		int c_c = c;
-		if (((a_c | b_c) & (a_c | b_c)) == 0)
-			massiv1[i] = round(massiv1[i]);
-		else
-			massiv1[i] = round((massiv1[i]) * 100) / 100;
-		double obrx1, obrx2, obrx;
-		obrx1 = -x1;
-		obrx2 = -x2;
-		double step2 = (obrx1 - obrx2) / 14.0;
-		obrx = obrx2 + step2 * i;
-		iksy2[i] = obrx;
-		massiv2[i] = F(obrx, a, b, c);
-		if (((a_c | b_c) & (a_c | b_c)) == 0)
-			massiv2[i] = round(massiv2[i]);
-		else
-			massiv2[i] = round((massiv2[i]) * 100) / 100;
+		double min_x1, min_x2, min_x, step2;
+		min_x1 = -x1;
+		min_x2 = -x2;
+		if (min_x1 > min_x2) {
+			step2 = (min_x1 - min_x2) / (double)(size - 1);
+			min_x = min_x2 + i * step2;
+		}
+		else {
+			step2 = (min_x2 - min_x1) / (double)(size - 1);
+			min_x = min_x1 + i * step2;
+		}
+		arg2[i] = min_x;
+		arr2[i] = F(min_x, a, b, c);
+		if (((a_c | b_c) & (a_c | b_c)) == 0) {
+			arr1[i] = round(arr1[i]);
+			arr2[i] = round(arr2[i]);
+		}
+		else {
+			arr1[i] = round((arr1[i]) * 100) / 100;
+			arr2[i] = round((arr2[i]) * 100) / 100;
+		}
 	}
 	if (interface) {
-		table(massiv1, iksy, 1);
-		table(massiv2, iksy2, 2);
+		table(arr1, arg1, 1);
+		table(arr2, arg2, 2);
 	}
-	else {
-		vivod(massiv1);
-		vivod(massiv2);
+	else{
+	array_to_disp(arr1, size);
+	array_to_disp(arr2, size);
 	}
-	for (int i = 0; i < 3; i++) {
-		double min = massiv1[5 * i];
+	for (int i = 0; i < (size / 5.0); i++) {
+		double min = arr1[5 * i];
 		for (int j = 0; j < 5; j++) {
-			if (massiv1[5 * i + j] < min)
-				min = massiv1[5 * i + j];
+			if (arr1[5 * i + j] < min)
+				min = arr1[5 * i + j];
 		}
 		if (interface)
-			cout << "Минимум " << i+1 << " пятерки: ";
-		cout << min << endl;
+			cout << "Минимум " << i + 1 << "-й пятерки равен " << min << endl;
+		else
+			cout << min << endl;
 	}
-	double obr_massiv1[15];
-	for (int i = 0; i < 15; i++) {
-		obr_massiv1[i] = massiv1[i];
-	}
+	double in_range[size];
+	for (int i = 0; i < size; i++)
+		in_range[i] = arr1[i];
 	bool is_changed = true;
 	while (is_changed) {
 		is_changed = false;
-		for (int j = 0; j < 14; j++) {
-			if (obr_massiv1[j] > obr_massiv1[j + 1]) {
-				swap(obr_massiv1[j], obr_massiv1[j + 1]);
-				swap(iksy[j], iksy[j + 1]);
+		for (int i = 0; i < size - 1; i++) {
+			if (in_range[i] > in_range[i + 1]) {
+				swap(in_range[i], in_range[i + 1]);
+				swap(arg1[i], arg1[i + 1]);
 				is_changed = true;
 			}
 		}
 	}
 	if (interface)
-		table(obr_massiv1,iksy, 3);
+		table(in_range, arg1, 3);
 	else
-		vivod(obr_massiv1);
-	int povt = 0;
-	for (int j = 0; j < 14; j++) {
-		if (massiv1[j] == massiv1[j + 1])
-			povt = povt + 1;
+		array_to_disp(in_range, size);
+	int repeat = 0;
+	for (int i = 0; i < size - 1; i++) {
+		if (arr1[i] == arr1[i + 1])
+			repeat++;
 	}
 	if (interface)
-		cout << "Количество чисел всетрчающихся более одного раза: ";
-	cout << povt << endl;
-	int numOfPowers=0;
-	for (int i = 14; i >= 0; i--) {
-			if (stepen2(massiv1[i]))
-				numOfPowers ++;
-			else break;
+		cout << "Количество повторяющихся чисел: ";
+	cout << repeat << endl;
+	int num_of_powers = 0;
+	for (int i = size; i <= 0; i--) {
+		if (power_of_two(arr1[i]))
+			num_of_powers++;
+		else break;
 	}
-	if (numOfPowers != 0) {
-		if (interface)
-			cout << "Номер элемента, начиная с которого степени 2:" << 14 - numOfPowers << endl;
-		else
-			cout << 14 - numOfPowers << endl;
+	if (interface)
+		cout << "Номер элемента, начиная с которого степени 2: ";
+	if (num_of_powers != 0)
+		cout << size - num_of_powers << endl;
+	else
+		cout << -1 << endl;
+	double plus[size], minus[size], arg3[size], arg4[size];
+	for (int i = 0; i < size; i++) {
+		plus[i] = 0;
+		minus[i] = 0;
+		arg3[i] = 0;
+		arg4[i] = 0;
 	}
-	else {
-		if (interface)
-			cout << "Номер элемента, начиная с которого степени 2:" << -1 << endl;
-		else
-			cout << -1 << endl;
-	}
-	double g[15], d[15], plus_x[15], minus_x[15];
-	for (int i = 0; i < 15; i++)
-	{
-		g[i] = 0;
-		d[i] = 0;
-		plus_x[i] = 0;
-		minus_x[i] = 0;
-	}
-	for (int i = 0; i < 15; i++) {
-		if (massiv1[i] > 0) {
-			for (int c = 0; c < 15; c++) {
-				if (g[c] == 0) {
-					g[c] = massiv1[i];
-					minus_x[c] = iksy[i];
+	for (int i = 0; i < size; i++) {
+		if (arr1[i] > 0) {
+			for (int j = 0; j < size; j++) {
+				if (plus[j] == 0&&arg3[j]==0) {
+					plus[j] = arr1[i];
+					arg3[j] = arg1[i];
 					break;
 				}
-				else continue;
 			}
-			massiv1[i] = 0;
+			arr1[i] = 0;
 		}
-		if (massiv2[i] < 0) {
-			for (int s = 0; s < 15; s++) {
-				if (d[s] == 0) {
-					d[s] = massiv2[i];
-					plus_x[s] = iksy2[i];
+		if (arr2[i] < 0) {
+			for (int j = 0; j < size; j++) {
+				if (minus[j] == 0 && arg4[j]==0) {
+					minus[j] = arr2[i];
+					arg4[j] = arg2[i];
 					break;
 				}
-				else continue;
 			}
-			massiv2[i] = 0;
+			arr2[i] = 0;
 		}
 	}
-	for (int i = 0; i < 15; i++) {
-		if (massiv1[i] == 0) {
-			for (int a = 0; a < 15; a++) {
-				if (d[a] != 0) {
-					massiv1[i] = d[a];
-					d[a] = 0;
-					break;
-				}
-				else continue;
+	bool is_changed2 = true;
+	while (is_changed2) {
+		is_changed2 = false;
+		for (int i = 0; i < size-1; i++) {
+			if (arr1[i] == 0 && arr1[i + 1] != 0) {
+				swap(arr1[i], arr1[i + 1]);
+				swap(arg1[i], arg1[i + 1]);
+				is_changed2 = true;
 			}
 		}
 	}
-	for (int i = 0; i < 15; i++) {
-		if (massiv2[i] == 0) {
-			for (int a = 0; a < 15; a++) {
-				if (g[a] != 0) {
-					massiv2[i] = g[a];
-					g[a] = 0;
+	bool is_changed3 = true;
+	while (is_changed3) {
+		is_changed3 = false;
+		for (int i = 0; i < size - 1; i++) {
+			if (arr2[i] == 0 && arr2[i + 1] != 0) {
+				swap(arr2[i], arr2[i + 1]);
+				swap(arg2[i], arg2[i + 1]);
+				is_changed3 = true;
+			}
+		}
+	}
+	int not_null1 = 0;
+	int not_null2 = 0;
+	for (int i = 0; i < size; i++) {
+		if (arr1[i] == 0) {
+			not_null1 = i;
+			for (int j = 0; j < size; j++) {
+				if (arr2[j] == 0) {
+					not_null2 = j;
 					break;
 				}
-				else continue;
+			}
+			break;
+		}
+	}
+	for (int i = not_null1; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			if (minus[j] != 0) {
+				arr1[i] = minus[j];
+				minus[j] = 0;
+				arg1[i] = arg4[j];
+				break;
+			}
+		}
+	}
+	for (int i = not_null2; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			if (plus[j] != 0) {
+				arr2[i] = plus[j];
+				plus[j] = 0;
+				arg2[i] = arg3[j];
+				break;
 			}
 		}
 	}
 	if (interface) {
-		table(massiv1, plus_x, 4);
-		table(massiv2, minus_x, 5);
+		table(arr1, arg1, 4);
+		table(arr2, arg2, 5);
 	}
 	else {
-		vivod(massiv1);
-		vivod(massiv2);
+		array_to_disp(arr1, size);
+		array_to_disp(arr2, size);
 	}
 }
