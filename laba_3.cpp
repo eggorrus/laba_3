@@ -4,6 +4,19 @@
 
 using namespace std;
 
+int repeats(double arr[], int size) {
+	int rep = 0;
+	for (int i = 0; i < size-1; i++) {
+		for (int j = i + 1; j < size; j++) {
+			if (arr[i] == arr[j]) {
+				rep++;
+				break;
+			}
+		}
+	}
+	return rep;
+}
+
 double rounds(double n) {
 	n = round(n);
 	if (n == -0)
@@ -131,11 +144,7 @@ int main(int argc, char* argv[]) {
 		table(in_range, arg1, 3);
 	else
 		array_to_disp(in_range, size);
-	int repeat = 0;
-	for (int i = 0; i < size - 1; i++) {
-		if (arr1[i] == arr1[i + 1])
-			repeat++;
-	}
+	int repeat = repeats(in_range, size);
 	if (interface)
 		cout << "Количество повторяющихся чисел: ";
 	cout << repeat << endl;
