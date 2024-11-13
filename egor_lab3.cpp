@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
 		table(in_range, arg1, 3);
 	else
 		array_to_disp(in_range, size);
-	int repeat = repeats(in_range, size);
+	int repeat = repeats(arr1, size);
 	if (interface)
 		cout << "Количество повторяющихся чисел: ";
 	cout << repeat << endl;
