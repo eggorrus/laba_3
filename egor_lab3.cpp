@@ -7,7 +7,7 @@ using namespace std;
 int repeats(double arr[], int size) {
 	int rep = 0;
 	for (int i = 0; i < size; i++) {
-		double c = 0;
+		int c = 0;
 		for (int j = i+1; j < size; j++) {
 			if (arr[j] == arr[i]) {
 				c++;
