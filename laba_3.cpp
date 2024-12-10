@@ -1,20 +1,37 @@
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
+#include <sstream>
 
 using namespace std;
 
 const int a_size = 15;
 
-void table(double arr[], double arg[], int num) {
-	cout << setw(14) << "Массив#" << num << endl;
-	cout << setw(41) << "=========================================" << endl;
-	cout << "||<" << setw(8) << "F" << setw(10) << "||" << setw(8) << "x" << setw(12) << "||" << endl;
-	cout << setw(40) << "----------------------------------------" << endl;
-	for (int i = 0; i < a_size-1; i++) {
-		cout << "||" << setw(8) << arr[i] << setw(11) << "||" << setw(8) << arg[i] << setw(12) << "||" << endl;
+int get_max_length(double array[]) {
+	int max_length = 0;
+	for (int i = 0; i < a_size; i++) {
+		ostringstream oss;
+		oss << fixed << setprecision(2) << array[i];
+		max_length = max(max_length, static_cast<int>(oss.str().length()));
 	}
-	cout << "||" << setw(8) << arr[a_size-1] << setw(11) << "||" << setw(8) << arg[a_size-1] << setw(12) << "||" << endl;
-	cout << setw(41) << "=========================================" << endl;
+	return max_length;
+}
+
+void table(double arr[], double arg[], int num) {
+	int max_length_arr = get_max_length(arr);
+	int max_length_arg = get_max_length(arg);
+	int column_wide = max(max_length_arr, 1) + 2; 
+	int column_wide2 = max(max_length_arg, 1) + 2;
+	cout << setw(((column_wide + column_wide2) / 2) + 4) << "Массив#" << num << endl;
+	cout << setw(column_wide + column_wide2 + 1) << setfill('=') << "" << setfill(' ') << endl;
+	cout << "|" << setw(column_wide - 1) << "F" << "|"
+		<< setw(column_wide2 - 1) << "x" << "|" << endl;
+	cout << setw(column_wide + column_wide2 + 1) << setfill('=') << "" << setfill(' ') << endl;
+
+	for (int i = 0; i < a_size; i++) {
+		cout << "|" << setw(column_wide - 1) << fixed << setprecision(2) << arr[i] << "|" << setw(column_wide2 - 1) << fixed << setprecision(2) << arg[i] << "|" << endl;
+	}
+	cout << setw(column_wide + column_wide2) << setfill('=') << "" << setfill(' ') << endl;
 }
 
 void integrate_arrays(double arr1[], double arr2[], double arg[], double sign_arg[]) {
@@ -213,6 +230,7 @@ int main(int argc, char* argv[]) {
 			if (arr1[5 * i + j] < minimum)
 				minimum = arr1[5 * i + j];
 		}
+		if(interface) cout << "Минимум " << i + 1 << "-й пятерки:" << endl;
 			cout << minimum << endl;
 	}
 	double in_range[a_size], arg_range[a_size];
