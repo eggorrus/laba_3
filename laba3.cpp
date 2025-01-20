@@ -180,13 +180,13 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	for (int i = 0; i < size; i++) {
-		if (arr2[i] >= 0) {
+		if (arr2[i] > 0) {
 			plus_arr[num_pl] = arr2[i];
 			num_pl++;
 		}
 	}
 	for (int i = 0; i < size; i++) {
-		if (arr1[i] >= 0) {
+		if (arr1[i] > 0) {
 			plus_arr[num_pl] = arr1[i];
 			num_pl++;
 		}
